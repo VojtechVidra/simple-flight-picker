@@ -2,6 +2,11 @@ import ReactSelect from "react-select";
 import { Props } from "react-select/src/Select";
 import { Control } from "./Control";
 
+export type SelectValue = {
+  label: string;
+  value: string;
+};
+
 export const Select: React.FC<Props> = ({ styles, ...props }) => (
   <ReactSelect
     styles={{

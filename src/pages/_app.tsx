@@ -1,9 +1,13 @@
 import React from "react";
-import App, { Container, AppContext } from "next/app";
+import { Container } from "next/app";
 import { GlobalStyle } from "../styles/GlobalStyle";
+import { Provider } from "react-redux";
+import { MyAppProps, MyAppContext } from "../types/appTypes";
+import withRedux from "next-redux-wrapper";
+import { initializeStore } from "../store/store";
 
-class MyApp extends App {
-  static async getInitialProps({ Component, ctx }: AppContext) {
+class MyApp extends React.Component<MyAppProps> {
+  static async getInitialProps({ Component, ctx }: MyAppContext) {
     let pageProps = {};
 
     if (Component.getInitialProps) {
@@ -14,15 +18,17 @@ class MyApp extends App {
   }
 
   render() {
-    const { Component, pageProps } = this.props;
+    const { Component, pageProps, store } = this.props;
 
     return (
       <Container>
-        <GlobalStyle />
-        <Component {...pageProps} />
+        <Provider store={store}>
+          <GlobalStyle />
+          <Component {...pageProps} />
+        </Provider>
       </Container>
     );
   }
 }
 
-export default MyApp;
+export default withRedux(initializeStore)(MyApp);

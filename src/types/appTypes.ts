@@ -1,6 +1,6 @@
 import { AppContext, AppProps } from "next/app";
-import { AppStore } from "../store/store";
 import { NextPageContext } from "next";
+import { AppStore } from "./store";
 
 export type MyAppPageContext = NextPageContext & { store: AppStore };
 

@@ -7,9 +7,9 @@ import { Grid } from "../components/UI/Grid";
 import { SelectValue } from "../components/UI/Select";
 import { Airport } from "../types/types";
 import { MyAppPageContext } from "../types/appTypes";
-import { getAllDestinationsAction, getDestinations } from "../store/destination";
+import { getAllDestinationsAction, getDestinations } from "../store/reducers/destination";
 import { connect } from "react-redux";
-import { MyMapStateToProps } from "../store/store";
+import { MyMapStateToProps } from "../types/store";
 
 interface PropsFromState {
   destinations: Airport[];

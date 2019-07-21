@@ -1,7 +1,7 @@
-import { Airport } from "../types/types";
+import { Airport } from "../../types/types";
 import { Action, Reducer } from "redux";
-import { MyThunkResult, RootState } from "./store";
-import { getAllDestinationsApiCall } from "../api/api";
+import { getAllDestinationsApiCall } from "../../api/api";
+import { MyThunkResult, RootState } from "../../types/store";
 
 const GET_DESTINATIONS_REQUEST = "GET_DESTINATIONS_REQUEST";
 const GET_DESTINATIONS_SUCCESS = "GET_DESTINATIONS_SUCCESS";
@@ -17,7 +17,7 @@ const initialState: DestinationState = {
   loading: false
 };
 
-const departure: Reducer<DestinationState, DestinationActionTypes> = (state = initialState, action) => {
+const destination: Reducer<DestinationState, DestinationActionTypes> = (state = initialState, action) => {
   switch (action.type) {
     case GET_DESTINATIONS_REQUEST:
       return { ...state, loading: true };
@@ -30,7 +30,7 @@ const departure: Reducer<DestinationState, DestinationActionTypes> = (state = in
   }
 };
 
-export default departure;
+export default destination;
 
 type GetDestinationsRequestAction = Action<typeof GET_DESTINATIONS_REQUEST>;
 
@@ -56,4 +56,4 @@ export const getAllDestinationsAction = (): MyThunkResult<
     .catch(err => dispatch({ type: GET_DESTINATIONS_FAILURE, payload: err }));
 };
 
-export const getDestinations = ({ destinations }: RootState): Airport[] => destinations;
+export const getDestinations = ({ destination: { destinations } }: RootState): Airport[] => destinations;

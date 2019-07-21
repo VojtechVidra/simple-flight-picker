@@ -17,6 +17,8 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "noImplicitAny": true
-  }
+    "noImplicitAny": true,
+    "typeRoots": ["../node_modules/@types"]
+  },
+  "exclude": ["**/*.spec.ts"]
 }

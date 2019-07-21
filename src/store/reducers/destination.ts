@@ -1,11 +1,11 @@
 import { Airport } from "../../types/types";
 import { Action, Reducer } from "redux";
 import { getAllDestinationsApiCall } from "../../api/api";
-import { MyThunkResult, RootState } from "../../types/store";
+import { MyThunkResult, RootState, RootAction } from "../../types/store";
 
-const GET_DESTINATIONS_REQUEST = "GET_DESTINATIONS_REQUEST";
-const GET_DESTINATIONS_SUCCESS = "GET_DESTINATIONS_SUCCESS";
-const GET_DESTINATIONS_FAILURE = "GET_DESTINATIONS_FAILURE";
+export const GET_DESTINATIONS_REQUEST = "GET_DESTINATIONS_REQUEST";
+export const GET_DESTINATIONS_SUCCESS = "GET_DESTINATIONS_SUCCESS";
+export const GET_DESTINATIONS_FAILURE = "GET_DESTINATIONS_FAILURE";
 
 export interface DestinationState {
   destinations: Airport[];
@@ -17,14 +17,20 @@ const initialState: DestinationState = {
   loading: false
 };
 
-const destination: Reducer<DestinationState, DestinationActionTypes> = (state = initialState, action) => {
+export type DestinationActionTypes =
+  | GetDestinationsRequestAction
+  | GetDestinationsSuccessAction
+  | GetDestinationsFailureAction;
+
+const destination: Reducer<DestinationState, RootAction> = (state = initialState, action) => {
   switch (action.type) {
     case GET_DESTINATIONS_REQUEST:
       return { ...state, loading: true };
     case GET_DESTINATIONS_SUCCESS:
       return { ...state, loading: false, destinations: action.payload };
-    case GET_DESTINATIONS_FAILURE:
+    case GET_DESTINATIONS_FAILURE: {
       return { ...state, loading: false };
+    }
     default:
       return state;
   }
@@ -33,19 +39,12 @@ const destination: Reducer<DestinationState, DestinationActionTypes> = (state = 
 export default destination;
 
 type GetDestinationsRequestAction = Action<typeof GET_DESTINATIONS_REQUEST>;
-
 type GetDestinationsSuccessAction = Action<typeof GET_DESTINATIONS_SUCCESS> & {
   payload: Airport[];
 };
-
 type GetDestinationsFailureAction = Action<typeof GET_DESTINATIONS_FAILURE> & {
   payload: Error;
 };
-
-export type DestinationActionTypes =
-  | GetDestinationsRequestAction
-  | GetDestinationsSuccessAction
-  | GetDestinationsFailureAction;
 
 export const getAllDestinationsAction = (): MyThunkResult<
   GetDestinationsRequestAction | GetDestinationsSuccessAction | GetDestinationsFailureAction

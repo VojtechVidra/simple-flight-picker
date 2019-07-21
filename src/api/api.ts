@@ -14,14 +14,14 @@ const get = (url: string, init?: RequestInit) =>
     .then(res => res.json())
     .catch((err: Error) => console.log(err.message));
 
-export const getAllDestinations = (language: string = "en"): Promise<Airport[]> =>
+export const getAllDestinationsApiCall = (language: string = "en"): Promise<Airport[]> =>
   get(
     `https://www.csa.cz/Umbraco/Api/DestinationCache/GetAllDestinations${generateQueryString({
       destinations_language: language
     })}`
   );
 
-export const getPrices = (
+export const getPricesApiCall = (
   departure: string,
   arrival: string,
   month: string,

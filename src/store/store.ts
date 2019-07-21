@@ -1,13 +1,23 @@
-import { createStore, applyMiddleware, Action, Store } from "redux";
+import { createStore, applyMiddleware, Store, AnyAction } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
-import reducer, { DestinationState } from "./destination";
+import thunk, { ThunkAction, ThunkDispatch } from "redux-thunk";
+
+import reducer, { DestinationState, DestinationActionTypes } from "./destination";
+import { MapStateToProps } from "react-redux";
 
 export interface RootState extends DestinationState {}
 
-export interface RootAction extends Action<any> {}
+export type RootAction = DestinationActionTypes;
 
-export type AppStore = Store<RootState, RootAction>;
+export type Dispatch = ThunkDispatch<RootState, undefined, RootAction>;
+export type AppStore = Store<RootState, RootAction> & {
+  dispatch: Dispatch;
+};
 
 export const initializeStore = (initialState: any) => {
-  return createStore(reducer, initialState, composeWithDevTools(applyMiddleware()));
+  return createStore(reducer, initialState, composeWithDevTools(applyMiddleware(thunk)));
 };
+
+export type MyThunkResult<A extends AnyAction, R = any> = ThunkAction<R, RootState, undefined, A>;
+
+export type MyMapStateToProps<Props, OwnProps = any> = MapStateToProps<Props, OwnProps, RootState>;

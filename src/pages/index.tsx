@@ -6,14 +6,18 @@ import { Container } from "../components/UI/Container";
 import { Grid } from "../components/UI/Grid";
 import { SelectValue } from "../components/UI/Select";
 import { Airport } from "../types/types";
-import { getAllDestinations } from "../api/api";
 import { MyAppPageContext } from "../types/appTypes";
+import { getAllDestinationsAction, getDestinations } from "../store/destination";
+import { connect } from "react-redux";
+import { MyMapStateToProps } from "../store/store";
 
-interface Props {
+interface PropsFromState {
   destinations: Airport[];
 }
 
-const Index: NextPage<Props> = ({ destinations }) => {
+interface Props extends PropsFromState {}
+
+const Index: NextPage<Props, {}> = ({ destinations }) => {
   const [departure, setDeparture] = useState<SelectValue | null | undefined>();
   const [arrival, setArrival] = useState<SelectValue | null | undefined>();
 
@@ -36,10 +40,15 @@ const Index: NextPage<Props> = ({ destinations }) => {
   );
 };
 
-Index.getInitialProps = async (_ctx: MyAppPageContext) => {
-  const destinations = await getAllDestinations();
+Index.getInitialProps = async ({ store }: MyAppPageContext) => {
+  await store.dispatch(getAllDestinationsAction());
 
-  return { destinations };
+  return {};
 };
 
-export default Index;
+const mapStateToProps: MyMapStateToProps<PropsFromState> = state => ({ destinations: getDestinations(state) });
+
+export default connect(
+  mapStateToProps,
+  null
+)(Index);

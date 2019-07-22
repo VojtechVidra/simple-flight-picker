@@ -25,9 +25,9 @@ export const getPricesApiCall = (
   departure: string,
   arrival: string,
   month: string,
-  sectorId: string = "0",
-  langugage: string = "en",
-  idLocation: string = "cz"
+  sectorId: string,
+  langugage: string,
+  idLocation: string
 ): Promise<Prices> =>
   get(
     `https://www.csa.cz/Umbraco/Api/CalendarPricesCache/GetPrices${generateQueryString({

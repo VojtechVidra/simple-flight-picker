@@ -1,4 +1,4 @@
-import { DayListAvailible, DayListOutOfDate } from "./types";
+import { DayListAvailible, DayListUnavailible } from "./types";
 
-export const isDayListAvailible = (daylist: DayListAvailible | DayListOutOfDate): daylist is DayListAvailible =>
+export const isDayListAvailible = (daylist: DayListAvailible | DayListUnavailible): daylist is DayListAvailible =>
   daylist.status === "AVAILABLE";

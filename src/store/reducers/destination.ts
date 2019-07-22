@@ -39,20 +39,29 @@ const destination: Reducer<DestinationState, RootAction> = (state = initialState
 export default destination;
 
 type GetDestinationsRequestAction = Action<typeof GET_DESTINATIONS_REQUEST>;
+const getDestinationsRequest = (): GetDestinationsRequestAction => ({ type: GET_DESTINATIONS_REQUEST });
 type GetDestinationsSuccessAction = Action<typeof GET_DESTINATIONS_SUCCESS> & {
   payload: Airport[];
 };
+const getDestinationsSuccess = (payload: Airport[]): GetDestinationsSuccessAction => ({
+  type: GET_DESTINATIONS_SUCCESS,
+  payload
+});
 type GetDestinationsFailureAction = Action<typeof GET_DESTINATIONS_FAILURE> & {
   payload: Error;
 };
+const GetDestinationsFailure = (payload: Error): GetDestinationsFailureAction => ({
+  type: GET_DESTINATIONS_FAILURE,
+  payload
+});
 
 export const getAllDestinationsAction = (): MyThunkResult<
   GetDestinationsRequestAction | GetDestinationsSuccessAction | GetDestinationsFailureAction
 > => dispatch => {
-  dispatch({ type: GET_DESTINATIONS_REQUEST });
+  dispatch(getDestinationsRequest());
   return getAllDestinationsApiCall()
-    .then(data => dispatch({ type: GET_DESTINATIONS_SUCCESS, payload: data }))
-    .catch(err => dispatch({ type: GET_DESTINATIONS_FAILURE, payload: err }));
+    .then(data => dispatch(getDestinationsSuccess(data)))
+    .catch(err => dispatch(GetDestinationsFailure(err)));
 };
 
 export const getDestinations = ({ destination: { destinations } }: RootState): Airport[] => destinations;

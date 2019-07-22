@@ -9,7 +9,7 @@ const uuid = jest.requireActual("uuid/v4");
 
 describe("flights converter", () => {
   it("converts data correctly", () => {
-    const ids = [uuid(), uuid()];
+    const ids: [string, string] = [uuid(), uuid()];
     uuidv4.mockReturnValueOnce(ids[0]).mockReturnValueOnce(ids[1]);
 
     const initialData: CalendarPriceList = {
@@ -78,7 +78,7 @@ describe("flights converter", () => {
       ]
     };
     const finalData = {
-      result: "05001c1a347f9d789a16dd68f945126593d42,",
+      result: "PRG-AMS-07/2019",
       entities: {
         flights: {
           [ids[0]]: {
@@ -111,7 +111,7 @@ describe("flights converter", () => {
           }
         },
         calendarPriceList: {
-          "05001c1a347f9d789a16dd68f945126593d42,": {
+          "PRG-AMS-07/2019": {
             sectorId: 0,
             depIata: "PRG",
             arrIata: "AMS",

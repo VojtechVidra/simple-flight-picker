@@ -3,7 +3,7 @@ import { isDayListAvailible } from "../types/typeUtils";
 import { normalize, schema } from "normalizr";
 import uuidv4 from "uuid/v4";
 
-interface ConvertedFlights {
+export interface ConvertedFlights {
   result: string;
   entities: {
     flights: {
@@ -21,7 +21,9 @@ const calendarPriceList = new schema.Entity(
   {
     flights: [flight]
   },
-  { idAttribute: "sid" }
+  {
+    idAttribute: ({ depIata, arrIata, month }: CalendarPriceList) => `${depIata}-${arrIata}-${month}`
+  }
 );
 
 export const convertFlights = ({ dayList, ...data }: CalendarPriceList): ConvertedFlights => {

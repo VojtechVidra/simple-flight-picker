@@ -35,6 +35,9 @@ const Index: NextPage<Props, {}> = ({ destinations }) => {
             <AirportSelect value={arrival} onChange={setArrival} airports={destinations} placeholder="Kam" />
           </Grid>
         </Grid>
+        <Grid container={true}>
+          <Grid flex={1} />
+        </Grid>
       </Container>
     </Page>
   );

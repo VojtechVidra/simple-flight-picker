@@ -39,6 +39,7 @@
     "@types/react-redux": "^7.1.1",
     "@types/react-select": "^3.0.0",
     "@types/styled-components": "^4.1.18",
+    "@types/uuid": "^3.4.5",
     "babel-plugin-styled-components": "^1.10.6",
     "jest": "^24.8.0",
     "typescript": "^3.5.3"

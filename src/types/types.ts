@@ -26,12 +26,13 @@ export interface FlightWithId extends Flight {
   price: string;
 }
 
-export interface DayListOutOfDate {
+export interface DayListUnavailible {
   date: string;
-  status: "OUT_OF_DATE";
+  status: "OUT_OF_DATE" | "SOLD_OUT";
   price: string;
   seats: string;
   duration: string;
+  rbd?: "";
   flightsCount: "";
 }
 
@@ -54,7 +55,7 @@ export interface CalendarPriceList {
   month: string;
   saleLocation: string;
   currency: string;
-  dayList: Array<DayListAvailible | DayListOutOfDate>;
+  dayList: Array<DayListAvailible | DayListUnavailible>;
 }
 
 export interface ConvertedCalendarPriceList extends CalendarPriceList {

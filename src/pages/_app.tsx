@@ -5,6 +5,9 @@ import { Provider } from "react-redux";
 import { MyAppProps, MyAppContext } from "../types/appTypes";
 import withRedux from "next-redux-wrapper";
 import { initializeStore } from "../store/store";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import MomentUtils from "@date-io/moment";
+import "moment/locale/cs";
 
 class MyApp extends React.Component<MyAppProps> {
   static async getInitialProps({ Component, ctx }: MyAppContext) {
@@ -23,8 +26,10 @@ class MyApp extends React.Component<MyAppProps> {
     return (
       <Container>
         <Provider store={store}>
-          <GlobalStyle />
-          <Component {...pageProps} />
+          <MuiPickersUtilsProvider utils={MomentUtils} locale="cs">
+            <GlobalStyle />
+            <Component {...pageProps} />
+          </MuiPickersUtilsProvider>
         </Provider>
       </Container>
     );

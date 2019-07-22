@@ -1,3 +1,4 @@
+import React from "react";
 import ReactSelect from "react-select";
 import { Props } from "react-select/src/Select";
 import { Control } from "./Control";

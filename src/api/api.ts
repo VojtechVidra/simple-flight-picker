@@ -4,7 +4,10 @@ import { Airport, Prices } from "../types/types";
 const generateQueryString = (params: object): string => "?" + new URLSearchParams(params as any);
 
 const get = (url: string, init?: RequestInit) =>
-  fetch(url, { method: "get", ...init })
+  fetch(url, {
+    method: "get",
+    ...init
+  })
     .then(res => {
       if (!res.ok) {
         throw new Error("Something went wrong");

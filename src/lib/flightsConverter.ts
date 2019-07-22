@@ -15,6 +15,9 @@ export interface ConvertedFlights {
   };
 }
 
+export const getCalendarId = (departure: string, arrival: string, date: string): string =>
+  `${departure}-${arrival}-${date}`;
+
 const flight = new schema.Entity("flights");
 const calendarPriceList = new schema.Entity(
   "calendarPriceList",
@@ -22,7 +25,7 @@ const calendarPriceList = new schema.Entity(
     flights: [flight]
   },
   {
-    idAttribute: ({ depIata, arrIata, month }: CalendarPriceList) => `${depIata}-${arrIata}-${month}`
+    idAttribute: ({ depIata, arrIata, month }: CalendarPriceList) => getCalendarId(depIata, arrIata, month)
   }
 );
 

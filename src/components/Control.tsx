@@ -1,3 +1,4 @@
+import React from "react";
 import { ControlProps } from "react-select/src/components/Control";
 import styled, { css } from "styled-components";
 

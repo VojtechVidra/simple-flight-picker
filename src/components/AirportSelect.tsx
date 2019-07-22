@@ -1,5 +1,6 @@
+import React from "react";
 import { Airport } from "../types/types";
-import { Select, SelectValue } from "./UI/Select";
+import { Select, SelectValue } from "./Select";
 import { Props as ReactSelectProps } from "react-select/src/Select";
 
 interface Props {
@@ -10,9 +11,9 @@ interface Props {
   onChange: (value: SelectValue | undefined | null) => void;
 }
 
-const getOptionFromAirport = ({ AirportCityName, AirportName, AirportCode, DestinationID }: Airport): SelectValue => ({
+const getOptionFromAirport = ({ AirportCityName, AirportName, AirportCode }: Airport): SelectValue => ({
   label: `${AirportCityName}, ${AirportName} (${AirportCode})`,
-  value: DestinationID.toString()
+  value: AirportCode
 });
 
 export const AirportSelect: React.FC<Props> = ({ airports, placeholder, value, onChange }) => (

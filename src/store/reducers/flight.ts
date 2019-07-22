@@ -1,7 +1,7 @@
 import { FlightWithId, ConvertedCalendarPriceList } from "../../types/types";
 import { Reducer, Action } from "redux";
-import { RootAction, MyThunkResult } from "../../types/store";
-import { ConvertedFlights, convertFlights } from "../../lib/flightsConverter";
+import { RootAction, MyThunkResult, RootState } from "../../types/store";
+import { ConvertedFlights, convertFlights, getCalendarId } from "../../lib/flightsConverter";
 import { getPricesApiCall } from "../../api/api";
 
 export const GET_FLIGHTS_REQUEST = "GET_FLIGHTS_REQUEST";
@@ -73,16 +73,43 @@ type GetPricesFailureAction = Action<typeof GET_FLIGHTS_FAILURE> & {
 };
 const getPricesFailure = (payload: Error): GetPricesFailureAction => ({ type: GET_FLIGHTS_FAILURE, payload });
 
-export const getPrices = (
+export const getPricesAction = (
   departure: string,
   arrival: string,
   month: string,
   sectorId: string = "0",
   langugage: string = "en",
   idLocation: string = "cz"
-): MyThunkResult<GetPricesRequestAction | GetPricesSuccessAction | GetPricesFailureAction> => dispatch => {
-  dispatch(getPricesRequest());
-  return getPricesApiCall(departure, arrival, month, sectorId, langugage, idLocation)
-    .then(data => dispatch(getPricesSuccess(convertFlights(data.calendarPriceList))))
-    .catch(err => dispatch(getPricesFailure(err)));
+): MyThunkResult<GetPricesRequestAction | GetPricesSuccessAction | GetPricesFailureAction> => (dispatch, getState) => {
+  const allreadyFetched = new Set(getState().flight.calendarPriceList.allIds);
+  if (!allreadyFetched.has(getCalendarId(departure, arrival, month))) {
+    dispatch(getPricesRequest());
+    return getPricesApiCall(departure, arrival, month, sectorId, langugage, idLocation)
+      .then(data => dispatch(getPricesSuccess(convertFlights(data.calendarPriceList))))
+      .catch(err => dispatch(getPricesFailure(err)));
+  }
 };
+
+const getFlight = ({ flight: { flights } }: RootState, id: string): FlightWithId | undefined => flights[id];
+
+const getCalendarPriceList = (
+  { flight: { calendarPriceList } }: RootState,
+  id: string
+): ConvertedCalendarPriceList | undefined => calendarPriceList.byId[id];
+
+export const getPrices = (state: RootState, calendarPriceListId: string): FlightWithId[] => {
+  const calendar = getCalendarPriceList(state, calendarPriceListId);
+  if (calendar) {
+    const ids = calendar.flights;
+    return ids.reduce((acc: FlightWithId[], curr) => {
+      const maybeFlight = getFlight(state, curr);
+      if (maybeFlight) {
+        acc.push(maybeFlight);
+      }
+      return acc;
+    }, []);
+  }
+  return [];
+};
+
+export const arePricesLoading = ({ flight: { loading } }: RootState) => loading;

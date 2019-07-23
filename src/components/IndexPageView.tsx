@@ -50,11 +50,9 @@ const IndexPage: React.FC<Props> = ({
           <AirportSelect value={departure} onChange={onChangeDeparture} airports={destinations} placeholder="Odkud" />
         </Grid>
         <Grid container={true} flex={isMobile ? 1 : 0} padding="10px" align="center" justify="center">
-          {rotateVisible && (
-            <Button onClick={onRotateClick}>
-              <RotateIcon />
-            </Button>
-          )}
+          <Button hidden={!rotateVisible} onClick={onRotateClick}>
+            <RotateIcon />
+          </Button>
         </Grid>
         <Grid flex={1} padding="10px" basis={isMobile ? "100%" : undefined}>
           <AirportSelect value={arrival} onChange={onChangeArrival} airports={destinations} placeholder="Kam" />

@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "node server.js",
-    "build": "next build",
+    "build": "next build ./src",
+    "now-build": "yarn build",
     "start": "NODE_ENV=production node server.js",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -18,7 +19,6 @@
     "@date-io/moment": "^1.3.8",
     "@material-ui/core": "^4.2.1",
     "@material-ui/pickers": "^3.2.0",
-    "@zeit/next-css": "^1.0.1",
     "isomorphic-unfetch": "^3.0.0",
     "moment": "^2.24.0",
     "next": "^9.0.2",
@@ -30,7 +30,6 @@
     "react-select": "^3.0.4",
     "react-sizes": "^2.0.0",
     "redux": "^4.0.4",
-    "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
     "styled-components": "^4.3.2",
     "uuid": "^3.3.2"
@@ -49,6 +48,7 @@
     "@types/uuid": "^3.4.5",
     "babel-plugin-styled-components": "^1.10.6",
     "jest": "^24.8.0",
+    "redux-devtools-extension": "^2.13.8",
     "typescript": "^3.5.3"
   },
   "prettier": {

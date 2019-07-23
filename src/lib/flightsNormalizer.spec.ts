@@ -1,5 +1,5 @@
 import { CalendarPriceList } from "../types/types";
-import { convertFlights } from "../lib/flightsConverter";
+import { convertFlights, ConvertedFlights } from "./flightsNormalizer";
 
 jest.mock("uuid/v4");
 
@@ -9,8 +9,13 @@ const uuid = jest.requireActual("uuid/v4");
 
 describe("flights converter", () => {
   it("converts data correctly", () => {
-    const ids: [string, string] = [uuid(), uuid()];
-    uuidv4.mockReturnValueOnce(ids[0]).mockReturnValueOnce(ids[1]);
+    const dayListIds: [string, string] = [uuid(), uuid()];
+    const flightIds: [string, string] = [uuid(), uuid()];
+    uuidv4
+      .mockReturnValueOnce(dayListIds[0])
+      .mockReturnValueOnce(flightIds[0])
+      .mockReturnValueOnce(dayListIds[1])
+      .mockReturnValueOnce(flightIds[1]);
 
     const initialData: CalendarPriceList = {
       sid: "05001c1a347f9d789a16dd68f945126593d42,",
@@ -77,11 +82,35 @@ describe("flights converter", () => {
         }
       ]
     };
-    const finalData = {
+    const finalData: ConvertedFlights = {
       result: "PRG-AMS-07/2019",
       entities: {
+        daylists: {
+          [dayListIds[0]]: {
+            date: "2019-07-21",
+            status: "AVAILABLE",
+            price: "4020",
+            seats: "3",
+            rbd: "A",
+            duration: "0130",
+            flightsCount: 1,
+            flights: [flightIds[0]],
+            id: dayListIds[0]
+          },
+          [dayListIds[1]]: {
+            date: "2019-07-22",
+            status: "AVAILABLE",
+            price: "1886",
+            seats: "1",
+            rbd: "S",
+            duration: "0135",
+            flightsCount: 1,
+            flights: [flightIds[1]],
+            id: dayListIds[1]
+          }
+        },
         flights: {
-          [ids[0]]: {
+          [flightIds[0]]: {
             flightNumber: "0618",
             seats: "3",
             rbd: "A",
@@ -92,10 +121,9 @@ describe("flights converter", () => {
             duration: "0130",
             mileage: "0",
             aircraftRef: "738",
-            price: "4020",
-            id: ids[0]
+            id: flightIds[0]
           },
-          [ids[1]]: {
+          [flightIds[1]]: {
             flightNumber: "0616",
             seats: "1",
             rbd: "S",
@@ -106,8 +134,7 @@ describe("flights converter", () => {
             duration: "0135",
             mileage: "0",
             aircraftRef: "738",
-            price: "1886",
-            id: ids[1]
+            id: flightIds[1]
           }
         },
         calendarPriceList: {
@@ -118,7 +145,7 @@ describe("flights converter", () => {
             month: "07/2019",
             saleLocation: "CZ",
             currency: "CZK",
-            flights: ids,
+            dayList: dayListIds,
             sid: "05001c1a347f9d789a16dd68f945126593d42,"
           }
         }
@@ -126,6 +153,6 @@ describe("flights converter", () => {
     };
 
     expect(convertFlights(initialData)).toEqual(finalData);
-    expect(uuidv4).toBeCalledTimes(2);
+    expect(uuidv4).toBeCalledTimes(4);
   });
 });

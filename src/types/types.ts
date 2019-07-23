@@ -23,7 +23,6 @@ export interface Flight {
 
 export interface FlightWithId extends Flight {
   id: string;
-  price: string;
 }
 
 export interface DayListUnavailible {
@@ -47,6 +46,15 @@ export interface DayListAvailible {
   flights: Flight[];
 }
 
+export interface DayListConverted extends Omit<DayListAvailible, "flights"> {
+  id: string;
+  flights: string[];
+}
+
+export interface DayListFromStore extends Omit<DayListAvailible, "flights"> {
+  flights: FlightWithId[];
+}
+
 export interface CalendarPriceList {
   sid: string;
   sectorId: number;
@@ -58,9 +66,8 @@ export interface CalendarPriceList {
   dayList: Array<DayListAvailible | DayListUnavailible>;
 }
 
-export interface ConvertedCalendarPriceList extends CalendarPriceList {
-  dayList: never;
-  flights: string[];
+export interface ConvertedCalendarPriceList extends Omit<CalendarPriceList, "dayList"> {
+  dayList: string[];
 }
 
 export interface Prices {

@@ -8,6 +8,10 @@ import { initializeStore } from "../store/store";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 import "moment/locale/cs";
+//@ts-ignore
+import { SizesProvider } from "react-sizes";
+
+const sizesConfig = { fallbackWidth: 1440 };
 
 class MyApp extends React.Component<MyAppProps> {
   static async getInitialProps({ Component, ctx }: MyAppContext) {
@@ -27,8 +31,10 @@ class MyApp extends React.Component<MyAppProps> {
       <Container>
         <Provider store={store}>
           <MuiPickersUtilsProvider utils={MomentUtils} locale="cs">
-            <GlobalStyle />
-            <Component {...pageProps} />
+            <SizesProvider config={sizesConfig}>
+              <GlobalStyle />
+              <Component {...pageProps} />
+            </SizesProvider>
           </MuiPickersUtilsProvider>
         </Provider>
       </Container>

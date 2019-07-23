@@ -1,21 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { NextPage } from "next";
-import { Page } from "../components/Page";
-import { AirportSelect } from "../components/AirportSelect";
-import { Container } from "../components/Container";
-import { Grid } from "../components/Grid";
+import { getOptionFromAirport } from "../components/AirportSelect";
 import { SelectValue } from "../components/Select";
 import { Airport } from "../types/types";
 import { MyAppPageContext } from "../types/appTypes";
 import { getAllDestinationsAction, getDestinations } from "../store/reducers/destination";
 import { connect } from "react-redux";
 import { MyMapStateToProps } from "../types/store";
-import { MonthPicker } from "../components/MonthPicker";
 import moment, { Moment } from "moment";
 import { getPricesAction } from "../store/reducers/flight";
-import { FlightList } from "../components/FlightList";
-import { getCalendarId } from "../lib/flightsConverter";
 import { getMonthAndYear } from "../lib/dateUtils";
+import { IndexPageView } from "../components/IndexPageView";
 
 interface PropsFromState {
   destinations: Airport[];
@@ -30,45 +25,45 @@ const Index: NextPage<Props, {}> = ({ destinations, getPrices }) => {
   const [departure, setDeparture] = useState<SelectValue | null | undefined>();
   const [arrival, setArrival] = useState<SelectValue | null | undefined>();
   const [selectedDate, setSelectedDate] = useState<Moment | null>(moment());
+  const [rotateVisible, setRotateVisible] = useState<boolean>(false);
 
   useEffect(() => {
+    const prg = destinations.find(d => d.AirportCode === "PRG");
+    prg && setDeparture(getOptionFromAirport(prg));
+  }, []);
+
+  useEffect(() => {
+    if (departure && arrival) {
+      setRotateVisible(true);
+    }
     if (departure && arrival && selectedDate) {
       getPrices(departure.value, arrival.value, getMonthAndYear(selectedDate));
     }
   }, [departure, arrival, selectedDate]);
 
-  return (
-    <Page>
-      <Container>
-        <Grid container={true}>
-          <Grid flex={1} padding="10px">
-            <AirportSelect value={departure} onChange={setDeparture} airports={destinations} placeholder="Odkud" />
-          </Grid>
-          <Grid flex={0} padding="10px">
-            Switch
-          </Grid>
-          <Grid flex={1} padding="10px">
-            <AirportSelect value={arrival} onChange={setArrival} airports={destinations} placeholder="Kam" />
-          </Grid>
-        </Grid>
-        <Grid container={true} justify="flex-end">
-          <Grid container={true} align="center">
-            <Grid padding="10px">Vyberte měsíc a rok</Grid>
-            <Grid padding="10px">
-              <MonthPicker value={selectedDate} onChange={setSelectedDate} />
-            </Grid>
-          </Grid>
-        </Grid>
+  const swapDestinations = () => {
+    if (departure && arrival) {
+      const newArrival = { ...departure };
+      const newDeparture = { ...arrival };
+      setDeparture(newDeparture);
+      setArrival(newArrival);
+    }
+  };
 
-        {departure && arrival && selectedDate && (
-          <Grid container={true} padding="10px">
-            <FlightList
-              calendarPriceListId={getCalendarId(departure.value, arrival.value, getMonthAndYear(selectedDate))}
-            />
-          </Grid>
-        )}
-      </Container>
-    </Page>
+  return (
+    <IndexPageView
+      {...{
+        arrival,
+        departure,
+        onChangeArrival: setArrival,
+        onChangeDeparture: setDeparture,
+        destinations,
+        onChangeDate: setSelectedDate,
+        onRotateClick: swapDestinations,
+        rotateVisible,
+        selectedDate
+      }}
+    />
   );
 };
 

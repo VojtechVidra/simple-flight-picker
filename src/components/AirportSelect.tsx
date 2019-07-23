@@ -11,7 +11,7 @@ interface Props {
   onChange: (value: SelectValue | undefined | null) => void;
 }
 
-const getOptionFromAirport = ({ AirportCityName, AirportName, AirportCode }: Airport): SelectValue => ({
+export const getOptionFromAirport = ({ AirportCityName, AirportName, AirportCode }: Airport): SelectValue => ({
   label: `${AirportCityName}, ${AirportName} (${AirportCode})`,
   value: AirportCode
 });

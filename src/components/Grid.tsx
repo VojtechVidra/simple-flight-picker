@@ -6,6 +6,8 @@ interface Props {
   padding?: string;
   justify?: string;
   align?: string;
+  wrap?: string;
+  basis?: string;
 }
 
 export const Grid = styled.div<Props>`
@@ -14,4 +16,6 @@ export const Grid = styled.div<Props>`
   padding: ${({ padding }) => padding};
   justify-content: ${({ justify }) => justify};
   align-items: ${({ align }) => align};
+  flex-wrap: ${({ wrap }) => wrap};
+  flex-basis: ${({ basis }) => basis};
 `;

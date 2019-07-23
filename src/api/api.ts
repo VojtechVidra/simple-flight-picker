@@ -15,7 +15,7 @@ const get = (url: string, init?: RequestInit) =>
       return res;
     })
     .then(res => res.json())
-    .catch((err: Error) => console.log(err.message));
+    .catch((err: Error) => console.warn(err.message));
 
 export const getAllDestinationsApiCall = (language: string = "en"): Promise<Airport[]> =>
   get(
@@ -25,20 +25,24 @@ export const getAllDestinationsApiCall = (language: string = "en"): Promise<Airp
   );
 
 export const getPricesApiCall = (
-  departure: string,
-  arrival: string,
-  month: string,
-  sectorId: string,
-  langugage: string,
-  idLocation: string
+  data: {
+    departure: string;
+    arrival: string;
+    month: string;
+    sectorId: string;
+    langugage: string;
+    idLocation: string;
+  },
+  init?: RequestInit
 ): Promise<Prices> =>
   get(
     `https://www.csa.cz/Umbraco/Api/CalendarPricesCache/GetPrices${generateQueryString({
-      DEP: departure,
-      ARR: arrival,
-      MONTH_SEL: month,
-      SECTOR_ID: sectorId,
-      LANG: langugage,
-      ID_LOCATION: idLocation
-    })}`
+      DEP: data.departure,
+      ARR: data.arrival,
+      MONTH_SEL: data.month,
+      SECTOR_ID: data.sectorId,
+      LANG: data.langugage,
+      ID_LOCATION: data.idLocation
+    })}`,
+    init
   );

@@ -1,11 +1,12 @@
-import { CalendarPriceList, FlightWithId, ConvertedCalendarPriceList } from "../types/types";
-import { isDayListAvailible } from "../types/typeUtils";
+import { CalendarPriceList, FlightWithId, ConvertedCalendarPriceList, DayListConverted } from "../types/types";
 import { normalize, schema } from "normalizr";
 import uuidv4 from "uuid/v4";
+import { isDayListAvailible } from "../types/typeUtils";
 
 export interface ConvertedFlights {
   result: string;
   entities: {
+    daylists: { [id: string]: DayListConverted };
     flights: {
       [id: string]: FlightWithId;
     };
@@ -19,10 +20,11 @@ export const getCalendarId = (departure: string, arrival: string, date: string):
   `${departure}-${arrival}-${date}`;
 
 const flight = new schema.Entity("flights");
+const dayList = new schema.Entity("daylists", { flights: [flight] });
 const calendarPriceList = new schema.Entity(
   "calendarPriceList",
   {
-    flights: [flight]
+    dayList: [dayList]
   },
   {
     idAttribute: ({ depIata, arrIata, month }: CalendarPriceList) => getCalendarId(depIata, arrIata, month)
@@ -32,11 +34,11 @@ const calendarPriceList = new schema.Entity(
 export const convertFlights = ({ dayList, ...data }: CalendarPriceList): ConvertedFlights => {
   let convertedFlights = {
     ...data,
-    flights: dayList
-      .filter(isDayListAvailible)
-      .map(({ price, flights }) => flights.map(flight => ({ ...flight, price, id: uuidv4() })))
-      // @ts-ignore
-      .flat()
+    dayList: dayList.filter(isDayListAvailible).map(({ flights, ...dayList }) => ({
+      ...dayList,
+      id: uuidv4(),
+      flights: flights.map(f => ({ ...f, id: uuidv4() }))
+    }))
   };
 
   return normalize(convertedFlights, calendarPriceList);
